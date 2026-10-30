@@ -39,6 +39,10 @@ button.copy{width:100%;min-height:52px;font:inherit;font-weight:700;font-size:16
   color:var(--ink-on);background:linear-gradient(135deg,var(--accent2),var(--accent));
   border:0;border-radius:12px;cursor:pointer}
 button.copy:active{transform:scale(.99)}
+button.example{width:100%;min-height:48px;font:inherit;font-size:15px;
+  color:var(--accent);background:transparent;border:1px solid var(--line);
+  border-radius:12px;cursor:pointer;margin:0 0 20px}
+button.example:active{transform:scale(.99)}
 #msg{font-size:13px;color:var(--mute);min-height:18px;margin-top:8px}
 footer{color:var(--mute);font-size:12px;text-align:center;margin-top:28px}
 footer a{color:var(--accent)}
@@ -48,6 +52,7 @@ footer a{color:var(--accent)}
 <main>
   <h1><span class="g">Brief</span> Builder</h1>
   <p class="sub">Brief an AI agent so it can run without you. Fill the fields, copy the brief, paste it to your agent.</p>
+  <button class="example" id="exBtn" type="button">See an example</button>
 
   <section>
     <label for="fGoal">Goal</label>
@@ -161,6 +166,25 @@ footer a{color:var(--accent)}
     copyText(brief).then(function(ok){
       msg.textContent = ok ? "Brief copied. Paste it to your agent." : "Copy did not work here. Select the brief above and copy it by hand.";
     });
+  });
+
+  var EXAMPLE = {
+    fGoal: "Dinner for 6 guests on Saturday night, on the table by 7pm.",
+    fConstraints: "One guest is vegetarian\nNo peanuts, severe allergy\nGrocery budget $80\nI get home at 5pm",
+    fCheck: "Menu written by Friday night; receipt under $80; a vegetarian main on the menu",
+    fStop: "No recipes needing special equipment; no new dishes after Friday",
+    fD1: "Main dish: mushroom risotto or eggplant parmesan",
+    fD2: "Store-bought dessert to save time",
+    fD3: "Serve buffet-style, no plated courses",
+    fScope: "Within scope: 3 dishes and a dessert. Anything more needs a cut."
+  };
+
+  $("exBtn").addEventListener("click", function(){
+    var has = fields.some(function(id){ return val(id).length > 0; });
+    if(has && !window.confirm("Replace what you have typed with the example?")) return;
+    fields.forEach(function(id){ $(id).value = EXAMPLE[id] || ""; });
+    render();
+    msg.textContent = "Example loaded. Edit it, or clear the fields to start fresh.";
   });
 
   render();
